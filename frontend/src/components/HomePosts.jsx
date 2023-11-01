@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 
 const HomePosts = ({post}) => {
-  console.log(post);
   return (
     <div className="w-full flex mt-8 space-x-4">
       {/* left */}
