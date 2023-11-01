@@ -1,1 +1,1 @@
-review my code in express-prisma
+review my code in prisma-express
