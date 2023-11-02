@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//one to many relation
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -17,16 +18,25 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  posts     Post[]
 }
 
 model Post {
-  id         Int      @id @default(autoincrement())
-  title      String   @unique
-  desc       String   @unique
+  id         Int        @id @default(autoincrement())
+  title      String     @unique
+  desc       String     @unique
   photo      String?
   username   String
   userId     Int
-  categories String[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  User       User       @relation(fields: [userId], references: [id])
+  categories Category[]
+}
+
+model Category {
+  id     Int    @id @default(autoincrement())
+  name   String
+  Post   Post?  @relation(fields: [postId], references: [id])
+  postId Int?
 }

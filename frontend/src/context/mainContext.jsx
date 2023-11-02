@@ -9,13 +9,11 @@ export const ToDoProvider = ({ children }) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:3000/api/auth/refetch", {
+        const res = await axios.get(URL + "/api/auth/refetch", {
           withCredentials: true,
         });
-        if(res.data !== null){
+        if (res.data) {
           setUser(res.data);
-        }else{
-          setUser(null)
         }
       } catch (error) {
         console.log("errror while fetching the refetch api", error.message);

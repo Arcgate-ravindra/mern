@@ -1,36 +1,38 @@
 /* eslint-disable react/prop-types */
+import { useContext } from "react";
+import ToDoContext from "../context/mainContext";
 
-
-const ProfilePosts = ({ p }) => {
-  // console.log(p)
-  return (
+const ProfilePosts = ({ post }) => {
+  const { user } = useContext(ToDoContext);
+  const date = new Date(post.updatedAt);
+  // Extract and format the time part along with AM/PM:
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+  const amPm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = (hours % 12 || 12).toString().padStart(2, "0");
+  const formattedTime = `${formattedHours}:${minutes} ${amPm}`;
+  return user?._id === post?.userId ? (
     <div className="w-full flex mt-8 space-x-4">
       {/* left */}
       <div className="w-[35%] h-[200px] flex justify-center items-center">
-        <img
-          src="https://images.unsplash.com/photo-1698341495465-a3627dbdff48?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5N3x8fGVufDB8fHx8fA%3D%3D"
-          alt=""
-          className="h-full w-full object-cover"
-        />
+        <img src={post.photo} alt="" className="h-full w-full object-cover" />
       </div>
       {/* right */}
       <div className="flex flex-col w-[65%]">
         <h1 className="text-xl font-bold md:mb-2 mb-1 md:text-2xl">
-          post title
+          {post.title}
         </h1>
         <div className="flex mb-2 text-sm font-semibold text-gray-500 items-center justify-between md:mb-4">
-          <p>@ username</p>
+          <p>@{post.username}</p>
           <div className="flex space-x-2">
-            <p>dateeeeeeeeeeeee</p>
-            <p>time</p>
+            <p>{new Date(post.createdAt).toDateString()}</p>
+            <p>{formattedTime}</p>
           </div>
         </div>
-        <p className="text-sm md:text-lg">
-          post description
-        </p>
+        <p className="text-sm md:text-lg">{post.desc}</p>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default ProfilePosts;

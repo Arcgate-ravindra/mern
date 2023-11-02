@@ -1,7 +1,5 @@
 const express=require('express')
 const router=express.Router()
-const User=require('../models/User')
-const bcrypt=require('bcrypt')
 const Post=require('../models/Post')
 const Comment=require('../models/Comment')
 const verifyToken = require('../verifyToken')
@@ -78,7 +76,7 @@ router.get("/",async (req,res)=>{
 })
 
 //GET USER POSTS
-router.get("/user/:userId",async (req,res)=>{
+router.get("/user/:userId", verifyToken,  async (req,res)=>{
     try{
         const posts=await Post.find({userId:req.params.userId})
         res.status(200).json(posts)

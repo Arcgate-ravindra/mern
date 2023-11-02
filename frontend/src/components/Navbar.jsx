@@ -7,7 +7,6 @@ import ToDoContext from "../context/mainContext"
 
 const Navbar = () => {
   const {user} = useContext(ToDoContext)
-  console.log("user",user)
   const [menu, setMenu] = useState(false);
   const showMenu = () => {
     setMenu(!menu);
