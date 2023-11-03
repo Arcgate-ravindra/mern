@@ -18,7 +18,6 @@ router.put("/update/:id", verifyToken, async (req, res) => {
       },
       data: req.body,
     });
-    //const updatedUser=await User.findByIdAndUpdate(req.params.id,{$set:req.body},{new:true})
     res.status(200).json(updatedUser);
   } catch (err) {
     res.status(500).json(err);
@@ -29,18 +28,28 @@ router.put("/update/:id", verifyToken, async (req, res) => {
 router.delete("/delete/:id", verifyToken, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await prisma.user.delete({
+
+    await prisma.category.deleteMany({
       where: {
-        id: id,
+        userId: id,
       },
     });
+
     await prisma.post.deleteMany({
       where: {
         userId: id,
       },
     });
+
+    await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+
     res.status(200).json("User has been deleted!");
   } catch (err) {
+    console.log(err.message);
     res.status(500).json(err);
   }
 });

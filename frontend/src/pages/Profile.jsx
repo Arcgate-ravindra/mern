@@ -1,18 +1,34 @@
+import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import ProfilePosts from "../components/ProfilePosts";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { URL } from "../url";
+
 
 const Profile = () => {
-  return (
+  const {id} = useParams();
+  const [User,setUser] = useState();
+  useEffect(() => {
+    const userFetch = async () => {
+      try {
+              const res = await axios.get(URL + "/api/users/" + id);
+              if(res.data){
+                setUser(res.data)
+              }
+      } catch (error) {
+            console.log("error while fetching using users in profile" + error,message)
+      }
+    }
+    userFetch()
+  },[id])
+  return ( 
     <div>
       <Navbar />
       <div className="min-h-[80vh] px-8 md:px-[200px] mt-8 flex md:flex-row flex-col-reverse md:items-start items-start">
-        <div className="flex flex-col md:w-[70%] w-full mt-8 md:mt-0">
-          <h1 className="text-xl font-bold mb-4">Your posts:</h1>
-          <ProfilePosts />
-          <ProfilePosts />
-          <ProfilePosts />
-          <ProfilePosts />
+        <div className="flex flex-col justify-center items-center space-y-4">
+          <img src="https://images.unsplash.com/photo-1698778874232-6a0a58d84055?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHx8" />
+          <h1 className="font-bold text-xl">{User?.username}</h1>
         </div>
         <div className="md:sticky md:top-12  flex justify-start md:justify-end items-start md:w-[30%] w-full md:items-end ">
           <div className=" flex flex-col space-y-4 items-start">

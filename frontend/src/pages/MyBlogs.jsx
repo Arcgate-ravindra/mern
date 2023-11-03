@@ -37,7 +37,7 @@ const MyBlogs = () => {
           </div>
         ))
       ) : (
-        <div>You are not authenticate</div>
+        <div><h1>No Posts are available</h1></div>
       )}
       <Footer />
     </div>

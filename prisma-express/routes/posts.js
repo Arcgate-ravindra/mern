@@ -11,6 +11,7 @@ router.post("/create", verifyToken, async (req, res) => {
     });
     res.status(200).json(newPost);
   } catch (err) {
+    console.log(err.message)
     res.status(500).json(err);
   }
 });
@@ -50,9 +51,12 @@ router.delete("/delete/:id", verifyToken, async (req, res) => {
 router.get("/get/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const post = await prisma.post.findUnique({
-      where: {
-        id: id,
+    const post = await prisma.post.findFirst({
+      where : {
+        id : id
+      },
+      include: {
+        User : true,
       },
     });
     res.status(200).json(post);
@@ -74,7 +78,25 @@ router.get("/getall", async (req, res) => {
             mode: "insensitive",
           },
         },
+        select : {
+          title : true
+        }
       };
+    }else{
+      searchQuery = {
+          include : {
+            categories : {
+              select : {
+                name : true
+              }
+            },
+            User : {
+              select : {
+                username : true
+              }
+            }
+          },
+      }
     }
     const posts = await prisma.post.findMany(searchQuery);
     res.status(200).json(posts);
@@ -87,10 +109,13 @@ router.get("/getall", async (req, res) => {
 router.get("/user/:id", verifyToken, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const posts = await prisma.post.findMany({
+    const posts = await prisma.user.findUnique({
       where: {
-        userId: id,
+        id : id,
       },
+      include : {
+        posts : true
+      }
     });
     res.status(200).json(posts);
   } catch (err) {

@@ -26,7 +26,6 @@ model Post {
   title      String     @unique
   desc       String     @unique
   photo      String?
-  username   String
   userId     Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
@@ -39,4 +38,5 @@ model Category {
   name   String
   Post   Post?  @relation(fields: [postId], references: [id])
   postId Int?
+  userId Int?
 }

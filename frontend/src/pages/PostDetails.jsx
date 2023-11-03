@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import { URL } from "../url";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import ToDoContext from "../context/mainContext";
 
 const PostDetails = () => {
   const { id } = useParams();
   const [Post, setPost] = useState("");
+  const { user } = useContext(ToDoContext);
+  const usenavigate = useNavigate();
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -23,6 +26,30 @@ const PostDetails = () => {
     };
     fetchPost();
   }, []);
+
+  const editPostHandler = () => {
+    try {
+      if (user?._id === Post.userId) {
+        usenavigate(`/edit/${Post._id}`);
+      }
+    } catch (error) {
+      console.log(`error while editing the post ${error.message}`);
+    }
+  };
+
+  const deletePostHandler = async () => {
+    try {
+      if (user?._id === Post.userId) {
+        await axios.delete(URL + "/api/posts/" + Post._id, {
+          withCredentials: true,
+        });
+        usenavigate(`/`);
+      }
+    } catch (error) {
+      console.log(`error while deleting the post ${error.message}`);
+    }
+  };
+
   const date = new Date(Post.updatedAt);
   // Extract and format the time part along with AM/PM:
   const hours = date.getUTCHours();
@@ -40,10 +67,14 @@ const PostDetails = () => {
           </h1>
           <div className="flex items-center justify-center space-x-2">
             <p className="cursor-pointer">
-              <BiEdit />
+              <button onClick={editPostHandler}>
+                <BiEdit />
+              </button>
             </p>
             <p className="cursor-pointer">
-              <MdDelete />
+              <button onClick={deletePostHandler}>
+                <MdDelete />
+              </button>
             </p>
           </div>
         </div>
