@@ -4,13 +4,16 @@ import HomePosts from "../components/HomePosts";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { URL } from "../url";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const {search} = useLocation()
+  console.log(search);
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const res = await axios.get(URL + "/api/posts/");
+        const res = await axios.get(URL + "/api/posts/" + search);
         setPosts(res.data);
       } catch (error) {
         console.log(`Error while fetching the all post api : ${error.message}`);
@@ -18,7 +21,7 @@ const Home = () => {
     };
 
     fetchAllPosts();
-  }, []);
+  }, [search]);
   return (
     <>
       <Navbar />
